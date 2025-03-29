@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>語音即時翻譯字幕</title>
+    <style>
+        body { background: black; color: white; font-family: sans-serif; text-align: center; padding: 40px; }
+        #subtitle { font-size: 2em; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>語音即時翻譯字幕</h1>
+    <button id="startBtn">開始錄音</button>
+    <div id="subtitle">字幕會顯示在這裡...</div>
+
+    <script>
+        let ws;
+        const subtitleDiv = document.getElementById("subtitle");
+
+        document.getElementById("startBtn").onclick = async () => {
+            ws = new WebSocket("wss://" + window.location.host + "/ws");
+
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const recorder = new MediaRecorder(stream);
+            const audioChunks = [];
+
+            recorder.ondataavailable = e => {
+                ws.send(e.data);
+            };
+
+            recorder.start(500); // 每 500ms 傳一次音訊
+
+            ws.onmessage = (event) => {
+                subtitleDiv.innerText = event.data;
+            };
+        };
+    </script>
+</body>
+</html>
