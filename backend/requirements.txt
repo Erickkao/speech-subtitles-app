@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-git+https://github.com/openai/whisper.git
-googletrans==4.0.0rc1
+whisper
 torch
+googletrans==4.0.0rc1
 ffmpeg-python

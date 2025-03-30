@@ -4,10 +4,15 @@ import tempfile
 import base64
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import whisper
 from googletrans import Translator
 
+# 初始化應用程式
 app = FastAPI()
+
+# 掛載前端靜態檔案（frontend 資料夾）
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 # 啟用 CORS 讓前端能存取 API
 app.add_middleware(
